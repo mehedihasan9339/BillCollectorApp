@@ -1,5 +1,7 @@
 using BillCollectorApp.Context;
 using BillCollectorApp.Data;
+using BillCollectorApp.Services;
+using BillCollectorApp.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +23,18 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
    .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
+
+
+
+#region Services
+builder.Services.AddScoped<IBillInfo, BillInfoService>();
+builder.Services.AddScoped<IBillType, BillTypeService>();
+builder.Services.AddScoped<ICommon, CommonService>();
+builder.Services.AddScoped<ICompany, CompanyService>();
+builder.Services.AddScoped<ICustomerInfo, CustomerInfoService>();
+#endregion
+
+
 
 var app = builder.Build();
 

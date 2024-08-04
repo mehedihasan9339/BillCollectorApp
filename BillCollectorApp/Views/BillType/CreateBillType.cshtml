@@ -1,0 +1,237 @@
+﻿@model BillTypeVm
+@{
+    ViewData["Title"] = "CreateBillType";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form theme-form">
+                    <form id="frm">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Code</label>
+                                    <input class="form-control" type="hidden" placeholder="Id*" id="id" name="id">
+                                    <input class="form-control" type="hidden" value="1" placeholder="status*" id="status" name="status">
+                                    <input class="form-control" type="text" placeholder="Code*" id="code" name="code">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Type Name</label>
+                                    <input class="form-control" type="text" placeholder="Type Name" id="name" name="name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-end"><a class="btn btn-success me-3" href="javascript:void(0)" onclick="Save()">Save</a><a class="btn btn-danger" onclick="Cancel()" href="#">Cancel</a></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="list-product-header">
+                    <div>
+                        @* <div class="light-box"><a data-bs-toggle="collapse" href="#collapseProduct" role="button" aria-expanded="false" aria-controls="collapseProduct"><i class="filter-icon show" data-feather="filter"></i><i class="icon-close filter-close hide"></i></a></div> *@
+                    </div>
+                    <div class="collapse" id="collapseProduct">
+                        <div class="card card-body list-product-body">
+                            <div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2 g-3">
+                                <div class="col">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected="">Choose Product</option>
+                                        <option value="1">Apple iphone 13 Pro</option>
+                                        <option value="2">Wood Chair</option>
+                                        <option value="3">M185 Compact Wireless Mouse</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected="">Choose Category</option>
+                                        <option value="1">Furniture</option>
+                                        <option value="2">Smart Gadgets</option>
+                                        <option value="3">Electrics</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected="">Choose Sub Category</option>
+                                        <option value="1">Smart Phones</option>
+                                        <option value="2">Smart Watches</option>
+                                        <option value="3">Wireless headphone</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected="">Status</option>
+                                        <option value="1">Sold Out </option>
+                                        <option value="2">In Stock</option>
+                                        <option value="3">Pre Order</option>
+                                        <option value="4">Limited Stock </option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected="">Price</option>
+                                        <option value="1">56000.00</option>
+                                        <option value="2">19000.00</option>
+                                        <option value="3">10000.00</option>
+                                        <option value="3">15000.00</option>
+                                        <option value="3">99000.00</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-product">
+                    <table class="table" id="tbl">
+                        <thead>
+                            <tr>
+                                <th> <span class="f-light f-w-600">Code</span></th>
+                                <th> <span class="f-light f-w-600">Name</span></th>
+                                <th> <span class="f-light f-w-600">Status</span></th>
+                                <th> <span class="f-light f-w-600">Action</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="product-removes">
+                                <td>
+                                    <p class="f-light">02145YK796</p>
+                                </td>
+                                <td>
+                                    <p class="f-light">Laptops</p>
+                                </td>
+                                <td> <span class="badge badge-light-secondary">Sold Out</span></td>
+                                <td>
+                                    <div class="product-action">
+                                        <a href="#" onclick="Edit()">
+                                            <svg>
+                                                <use href="../assets/svg/icon-sprite.svg"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" onclick="Delete()">
+                                            <svg>
+                                                <use href="../assets/svg/icon-sprite.svg"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function(){
+            LoadData();
+            $('#tbl').DataTable();
+        })
+
+        function Save() {
+            var frm = $('#frm').serialize();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to submit the data?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, submit it!',
+                cancelButtonText: 'No, cancel!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/api/CreateBillType',
+                        type: 'POST',
+                        data: frm,
+                        success: function (response) {
+                            Swal.fire(
+                                'Submitted!',
+                                'Your data has been submitted.',
+                                'success'
+                            );
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'There was an error submitting your data.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+
+        function LoadData() {
+            $.ajax({
+                url: '/api/GetBillTypes',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    var option = '';
+
+                    $.each(response, function (i, item) {
+                        var status = item.status == 1 ? "Active" : "Inactive";
+
+
+                        option += `<tr class="product-removes">
+                                        <td>
+                                            <p class="f-light">${item.code}</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">${item.name}</p>
+                                        </td>
+                                                <td> <span class="badge badge-light-secondary">${status}</span></td>
+                                        <td>
+                                                <a class="btn btn-warning btn-sm" onclick="Edit(${item.id})"><i class="fa fa-pencil"></i></a>
+                                                <a class="btn btn-danger btn-sm" onclick="Delete(${item.id})"><i class="fa fa-trash-o"></i></a>
+                                        </td>
+                                    </tr>`
+                    })
+
+                    $('#tbl tbody').empty();
+                    $('#tbl tbody').append(option);
+                },
+                error: function (xhr, status, error) {
+                    $('#result').html(`
+                                            <p>Error: ${error}</p>
+                                        `);
+                }
+            });
+        }
+    </script>
+}
+
+
+

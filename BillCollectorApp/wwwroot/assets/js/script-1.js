@@ -319,7 +319,7 @@
       ae: "Prughjettu",
     },
     {
-      en: "Widgets",
+      en: "Customer",
       pt: "Ferramenta",
       es: "Vidin",
       fr: "Widgets",
@@ -328,7 +328,7 @@
       ae: "ÙˆØ§Ù„Ø­Ø§Ø¬ÙŠØ§Øª",
     },
     {
-      en: "Page layout",
+      en: "Bill",
       pt: "Layout da pÃ¡gina",
       es: "PaÄa aranÄo",
       fr: "Tableaux",

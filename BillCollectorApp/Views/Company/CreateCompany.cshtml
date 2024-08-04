@@ -1,0 +1,199 @@
+﻿@model CreateCompanyVm
+@{
+    ViewData["Title"] = "CreateCompany";
+}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form theme-form">
+                    <form id="frm">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Code</label>
+                                    <input class="form-control" type="hidden" placeholder="Id*" id="id" name="id">
+                                    <input class="form-control" type="text" placeholder="Code*" id="code" name="code">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Name</label>
+                                    <input class="form-control" type="text" placeholder="Type Name" id="name" name="name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Phone</label>
+                                    <input class="form-control" type="text" placeholder="Type Phone" id="phone" name="phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Email</label>
+                                    <input class="form-control" type="email" placeholder="Type Email" id="email" name="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Address</label>
+                                    <input class="form-control" type="text" placeholder="Type Address" id="address" name="address">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Logo</label>
+                                    <input class="form-control" type="text" placeholder="" id="logo" name="logo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-end"><a class="btn btn-success me-3" href="javascript:void(0)" onclick="Save()">Save</a><a class="btn btn-danger" onclick="Cancel()" href="#">Cancel</a></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="list-product">
+                    <table class="table" id="tbl">
+                        <thead>
+                            <tr>
+                                <th> <span class="f-light f-w-600">Code</span></th>
+                                <th> <span class="f-light f-w-600">Name</span></th>
+                                <th> <span class="f-light f-w-600">Email</span></th>
+                                <th> <span class="f-light f-w-600">Address</span></th>
+                                <th> <span class="f-light f-w-600">Action</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            LoadData();
+            $('#tbl').DataTable();
+        })
+
+        function Save() {
+            var frm = $('#frm').serialize();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to submit the data?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, submit it!',
+                cancelButtonText: 'No, cancel!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/api/CreateCompany',
+                        type: 'POST',
+                        data: frm,
+                        success: function (response) {
+                            Swal.fire(
+                                'Submitted!',
+                                'Your data has been submitted.',
+                                'success'
+                            );
+
+                            LoadData();
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'There was an error submitting your data.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+
+        function LoadData() {
+            $.ajax({
+                url: '/api/GetCompanies',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    var option = '';
+
+                    $.each(response, function (i, item) {
+                        var status = item.status == 1 ? "Active" : "Inactive";
+
+
+                        option += `<tr class="product-removes">
+                                            <td>
+                                                <p class="f-light">${item.code}</p>
+                                            </td>
+                                            <td>
+                                                <p class="f-light">${item.name}</p>
+                                                <p class="f-light">${item.phone}</p>
+                                            </td>
+                                            <td>
+                                                <p class="f-light">${item.email}</p>
+                                            </td>
+                                            <td>
+                                                <p class="f-light">${item.address}</p>
+                                            </td>
+                                            <td>
+                                                    <a class="btn btn-warning btn-sm" onclick="Edit(${item.id})"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-danger btn-sm" onclick="Delete(${item.id})"><i class="fa fa-trash-o"></i></a>
+                                            </td>
+                                        </tr>`
+                    })
+
+                    $('#tbl tbody').empty();
+                    $('#tbl tbody').append(option);
+                },
+                error: function (xhr, status, error) {
+                    $('#result').html(`
+                                    <p>Error: ${error}</p>
+                                `);
+                }
+            });
+        }
+    </script>
+}
+
+
+

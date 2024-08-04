@@ -1,0 +1,56 @@
+﻿@model CreateCustomerVm
+@{
+    ViewData["Title"] = "GetCustomers";
+}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="list-product">
+                    <table class="table" id="tbl">
+                        <thead>
+                            <tr>
+                                <th> <span class="f-light f-w-600">Code</span></th>
+                                <th> <span class="f-light f-w-600">Name</span></th>
+                                <th> <span class="f-light f-w-600">Email</span></th>
+                                <th> <span class="f-light f-w-600">Gender</span></th>
+                                <th> <span class="f-light f-w-600">Status</span></th>
+                                <th> <span class="f-light f-w-600">Action</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Customers)
+                            {
+                                <tr class="product-removes">
+                                    <td>
+                                        <p class="f-light">@item.code</p>
+                                    </td>
+                                    <td>
+                                        <p class="f-light">@item.name</p>
+                                        <p class="f-light">@item.phone</p>
+                                    </td>
+                                    <td>
+                                        <p class="f-light">@item.email</p>
+                                    </td>
+                                    <td>
+                                        <p class="f-light">@item.gender</p>
+                                    </td>
+                                    <td> <span class="badge badge-light-secondary">@(item.status == 1 ? "Active" : "Inactive")</span></td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" onclick="Edit(@item.Id)"><i class="fa fa-pencil"></i></a>
+                                        <a class="btn btn-danger btn-sm" onclick="Delete(@item.Id)"><i class="fa fa-trash-o"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

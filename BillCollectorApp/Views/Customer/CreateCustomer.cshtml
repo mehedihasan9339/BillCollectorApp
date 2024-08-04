@@ -1,0 +1,143 @@
+﻿@model CreateCustomerVm
+@{
+    ViewData["Title"] = "CreateCustomer";
+}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form theme-form">
+                    <form id="frm">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Code</label>
+                                    <input class="form-control" type="hidden" placeholder="Id*" id="id" name="id">
+                                    <input class="form-control" type="hidden" value="1" placeholder="Id*" id="companyId" name="companyId">
+                                    <input class="form-control" type="text" placeholder="Code*" id="code" name="code">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Name</label>
+                                    <input class="form-control" type="text" placeholder="Type Name" id="name" name="name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Gender</label>
+                                    <select class="form-control" id="gender" name="gender">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Phone</label>
+                                    <input class="form-control" type="text" placeholder="Type Phone" id="phone" name="phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Email</label>
+                                    <input class="form-control" type="email" placeholder="Type Email" id="email" name="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Address</label>
+                                    <input class="form-control" type="text" placeholder="Type Address" id="address" name="address">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label>Status</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-end"><a class="btn btn-success me-3" href="javascript:void(0)" onclick="Save()">Save</a><a class="btn btn-danger" onclick="Cancel()" href="#">Cancel</a></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#tbl').DataTable();
+        })
+
+        function Save() {
+            var frm = $('#frm').serialize();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to submit the data?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, submit it!',
+                cancelButtonText: 'No, cancel!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/api/CreateCustomer',
+                        type: 'POST',
+                        data: frm,
+                        success: function (response) {
+                            Swal.fire(
+                                'Submitted!',
+                                'Your data has been submitted.',
+                                'success'
+                            );
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'There was an error submitting your data.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+    </script>
+}
+
+
+

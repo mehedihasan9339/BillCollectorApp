@@ -116,29 +116,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="product-removes">
-                                <td>
-                                    <p class="f-light">02145YK796</p>
-                                </td>
-                                <td>
-                                    <p class="f-light">Laptops</p>
-                                </td>
-                                <td> <span class="badge badge-light-secondary">Sold Out</span></td>
-                                <td>
-                                    <div class="product-action">
-                                        <a href="#" onclick="Edit()">
-                                            <svg>
-                                                <use href="../assets/svg/icon-sprite.svg"></use>
-                                            </svg>
-                                        </a>
-                                        <a href="#" onclick="Delete()">
-                                            <svg>
-                                                <use href="../assets/svg/icon-sprite.svg"></use>
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
                             
                         </tbody>
                     </table>
@@ -179,6 +156,8 @@
                                 'Your data has been submitted.',
                                 'success'
                             );
+
+                            LoadData();
                         },
                         error: function (xhr, status, error) {
                             Swal.fire(

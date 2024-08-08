@@ -126,7 +126,7 @@ namespace BillCollectorApp.Controllers
 
             var message = String.Format("Your bill (TK {0}) has been paid successfully for {1}, {2}. Thank you.", data.bill, data.month, data.year);
 
-            //await _smsService.SendSmsAsync("88" + data.customer.phone, message);
+            await _smsService.SendSmsAsync("88" + data.customer.phone, message);
 
             await _emailService.SendPaymentSuccessEmailAsync(data.customer.email, data.customer.name, data.bill.ToString(), DateTime.Now.Ticks.ToString());
 
@@ -140,7 +140,7 @@ namespace BillCollectorApp.Controllers
 
             var message = String.Format("Your bill (TK {0}) has been cancelled for {1}, {2}. Please contact us.", data.bill, data.month, data.year);
 
-            //await _smsService.SendSmsAsync("88" + data.customer.phone, message);
+            await _smsService.SendSmsAsync("88" + data.customer.phone, message);
 
             return Ok(data);
         }

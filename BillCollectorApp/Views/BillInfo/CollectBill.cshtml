@@ -1,0 +1,281 @@
+﻿@model CollectBillVm
+
+@{
+    ViewData["Title"] = "CollectBill";
+}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+
+<style>
+    table tbody tr td:first-child {
+        width: 20%;
+    }
+
+    table tbody tr td:last-child {
+        width: 20%;
+    }
+    .bg-paid{
+        background-color: lightgreen !important
+    }
+    .bg-pending{
+        background-color: lightpink !important
+    }
+</style>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form theme-form">
+                    <form id="frm">
+                        <div class="row">
+                            <div class="col-md-6 row">
+                                <div class="mb-3">
+                                    <label class="col-md-3">Bill Type</label>
+                                    <select class="form-control col-md-9" id="billTypeId" name="billTypeId" onchange="GetCustomers()">
+                                        <option value="0">Choose Bill Type</option>
+                                        @foreach (var item in Model.BillTypes)
+                                        {
+                                            <option value="@item.Id">@item.name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 row">
+                                <div class="mb-3">
+                                    <label class="col-md-3">Customer</label>
+                                    <select class="form-control col-md-9" id="customerId" name="customerId" onchange="GetCustomerBills()">
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="list-product">
+                    <div class="table-responsive">
+                        <table class="table" id="tbl">
+                            <thead>
+                                <tr>
+                                    <th> <span class="f-light f-w-600">Customer</span></th>
+                                    <th> <span class="f-light f-w-600">Generated</span></th>
+                                    <th> <span class="f-light f-w-600">Due Date</span></th>
+                                    <th> <span class="f-light f-w-600">Bill</span></th>
+                                    <th> <span class="f-light f-w-600">Status</span></th>
+                                    <th> <span class="f-light f-w-600">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Payment Details</h5>
+            </div>
+            <div class="modal-body">
+                <form id="paymentForm">
+                    <div class="form-group d-none">
+                        <label for="id">ID</label>
+                        <input type="text" class="form-control" id="id" name="id">
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select class="form-control" id="paymentMethod" name="paymentMethod" required>
+                            <option value="">Select Payment Method</option>
+                            <option value="bKash">bKash</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Rocket">Rocket</option>
+                            <option value="Bank">Bank</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="trxId">Transaction ID</label>
+                        <input type="text" class="form-control" id="trxId" name="trxId">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="Close()" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="Pay()">Pay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#tbl').DataTable();
+        })
+
+        function GetCustomers() {
+            var typeId = $('#billTypeId :selected').val();
+
+
+            $.ajax({
+                url: '/api/GetCustomerByBillTypeId?typeId=' + typeId,
+                type: 'GET',
+                success: function (response) {
+                    console.log('Data loaded successfully:', response);
+                    var option = '<option value="0">Choose Customer</option>';
+
+                    $.each(response, function (i, item) {
+                        option += `<option value="${item.id}">${item.code}-${item.name}</option>`
+                    })
+
+                    $('#customerId').empty();
+                    $('#customerId').append(option);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading data:', error);
+                }
+            });
+        }
+
+
+        function GetCustomerBills() {
+            var customerId = $('#customerId :selected').val();
+
+
+            if (customerId > 0) {
+                $.ajax({
+                    url: '/api/GetCustomerBills?customerId=' + customerId,
+                    type: 'GET',
+                    success: function (response) {
+                        console.log('Data loaded successfully:', response);
+                        var option = '';
+
+                        $.each(response, function (i, item) {
+                            var cls = 'pending';
+
+                            if (item.status == 1){
+                                cls = 'paid';
+                            }
+
+                            option += `<tr class="product-removes bg-${cls}">
+                                            <td>
+                                                <p class="f-light">${item.customer?.code}-${item.customer?.name}</p>
+                                                <p class="f-light">${item.customer?.phone}</p>
+                                            </td>
+                                            <td>
+                                                <p class="f-light">${formatDate(item.generateDate)}</p>
+                                            </td>
+                                            <td>
+                                                <p class="f-light">${formatDate(item.dueDate)} </p>
+                                            </td>
+                                            <td>
+                                                <p class="f-light">${item.bill} </p>
+                                            </td>
+                                            <td>
+                                                <p class="f-light">${item.status == 1 ? 'Paid' : 'Pending'} </p>
+                                                <p class="f-light"> ${item.status == 1 ? formatDate(item.paymentDate) : ''} </p>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-warning btn-sm" onclick="PayModal(${item.id})"><i class="fa fa-pencil"></i></a>
+                                                <a class="btn btn-danger btn-sm" onclick="Cancel(${item.id})"><i class="fa fa-times"></i></a>
+                                            </td>
+                                        </tr>`
+                        })
+
+                        $('#tbl tbody').empty();
+                        $('#tbl tbody').append(option);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error loading data:', error);
+                    }
+                });
+            }
+        }
+
+
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+
+            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            var day = ('0' + date.getDate()).slice(-2); // Adding leading zero
+            var month = months[date.getMonth()];
+            var year = date.getFullYear();
+
+            var formattedDate = day + " " + month + " " + year;
+
+            return formattedDate;
+        }
+
+
+        function PayModal(id){
+            $('#myModal #id').val(id);
+            $('#myModal #paymentMethod').val('');
+            $('#myModal #trxId').val('');
+            $('#myModal').modal('show');
+        }
+
+
+
+        function Pay() {
+            var id = $('#myModal #id').val();
+
+
+            $.ajax({
+                url: '/api/UpdatePaid?id=' + id,
+                type: 'GET',
+                success: function (response) {
+                    console.log('Data loaded successfully:', response);
+                    GetCustomerBills();
+                    $('#myModal').modal('hide');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading data:', error);
+                }
+            });
+        }
+
+        function Cancel(id) {
+            $.ajax({
+                url: '/api/CancelPayment?id=' + id,
+                type: 'GET',
+                success: function (response) {
+                    console.log('Data loaded successfully:', response);
+                    GetCustomerBills();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading data:', error);
+                }
+            });
+        }
+
+        function Close() {
+            $('#myModal').modal('hide');
+        }
+
+    </script>
+}

@@ -1,4 +1,5 @@
 ﻿using BillCollectorApp.Data.Customer;
+using BillCollectorApp.Data.MasterData;
 using BillCollectorApp.Models;
 using BillCollectorApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,15 +9,22 @@ namespace BillCollectorApp.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerInfo _customerService;
+        private readonly IBillType _billTypeService;
 
-        public CustomerController(ICustomerInfo customerService)
+        public CustomerController(ICustomerInfo customerService, IBillType billTypeService)
         {
             _customerService = customerService;
+            _billTypeService = billTypeService;
         }
 
-        public IActionResult CreateCustomer()
+        public async Task<IActionResult> CreateCustomer()
         {
-            return View();
+            var data = new CreateCustomerVm
+            {
+                BillTypes = await _billTypeService.GetBillTypes()
+            };
+
+            return View(data);
         }
         [HttpPost("/api/CreateCustomer")]
         public async Task<IActionResult> CreateCustomer(CreateCustomerVm model)
@@ -33,7 +41,8 @@ namespace BillCollectorApp.Controllers
                     email = model.email,
                     address = model.address,
                     status = model.status,
-                    companyId = model.companyId
+                    companyId = model.companyId,
+                    billTypeId = model.billTypeId
                 };
 
                 var result = await _customerService.SaveCustomer(data);

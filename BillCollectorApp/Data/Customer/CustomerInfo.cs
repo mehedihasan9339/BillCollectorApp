@@ -12,6 +12,9 @@ namespace BillCollectorApp.Data.Customer
         public string address { get; set; }
         public int status { get; set; } = 1;
 
+        public int billTypeId { get; set; }
+        public BillType billType { get; set; }
+
         public int companyId { get; set; }
         public Company company { get; set; }
     }

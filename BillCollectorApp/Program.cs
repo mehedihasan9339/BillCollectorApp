@@ -32,6 +32,7 @@ builder.Services.AddScoped<IBillType, BillTypeService>();
 builder.Services.AddScoped<ICommon, CommonService>();
 builder.Services.AddScoped<ICompany, CompanyService>();
 builder.Services.AddScoped<ICustomerInfo, CustomerInfoService>();
+builder.Services.AddScoped<ISms, SmsService>();
 #endregion
 
 

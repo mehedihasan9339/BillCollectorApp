@@ -13,10 +13,12 @@ namespace BillCollectorApp.Models
         public string email { get; set; }
         public string address { get; set; }
         public int status { get; set; } = 1;
+        public int billTypeId { get; set; }
 
         public int companyId { get; set; }
 
         public IEnumerable<Company> Companies { get; set; }
         public IEnumerable<CustomerInfo> Customers { get; set; }
+        public IEnumerable<BillType> BillTypes { get; set; }
     }
 }

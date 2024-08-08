@@ -7,11 +7,10 @@ namespace BillCollectorApp.Data.Bill
     {
         public int customerId { get; set; }
         public CustomerInfo customer { get; set; }
-        public int billTypeId { get; set; }
-        public BillType billType { get; set; }
 
         public DateTime? generateDate { get; set; }
         public DateTime? dueDate { get; set; }
+        public DateTime? paymentDate { get; set; }
 
         public decimal? bill { get; set; }
         public string month { get; set; }

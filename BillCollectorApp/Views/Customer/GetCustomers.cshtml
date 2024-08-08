@@ -7,6 +7,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 
 
+
+<style>
+    #tbl .btn {
+        padding: 5px 12px;
+    }
+</style>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
@@ -42,8 +49,9 @@
                                     </td>
                                     <td> <span class="badge badge-light-secondary">@(item.status == 1 ? "Active" : "Inactive")</span></td>
                                     <td>
-                                        <a class="btn btn-warning btn-sm" onclick="Edit(@item.Id)"><i class="fa fa-pencil"></i></a>
-                                        <a class="btn btn-danger btn-sm" onclick="Delete(@item.Id)"><i class="fa fa-trash-o"></i></a>
+                                        <a class="btn btn-info btn-sm" onclick="View(@item.Id)">View</a>
+                                        <a class="btn btn-warning btn-sm" onclick="Edit(@item.Id)">Edit</a>
+                                        <a class="btn btn-danger btn-sm" onclick="Delete(@item.Id)">Remove</a>
                                     </td>
                                 </tr>
                             }
@@ -54,3 +62,11 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function View(id) {
+            window.location.href = '/BillInfo/CollectCustomerBill?customerId=' + id;
+        }
+    </script>
+}

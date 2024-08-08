@@ -40,7 +40,7 @@ namespace BillCollectorApp.Services
 
         public async Task<BillInfo> GetBillInfoById(int id)
         {
-            var data = await _context.BillInfos.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+            var data = await _context.BillInfos.Include(x => x.customer).Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
 
             return data;
         }

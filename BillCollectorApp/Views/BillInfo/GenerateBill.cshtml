@@ -17,6 +17,10 @@
     table tbody tr td:last-child {
         width: 20%;
     }
+
+    #tbl .btn {
+        padding: 5px 12px;
+    }
 </style>
 
 <div class="row">
@@ -221,8 +225,8 @@
                                                                         <p class="f-light">${item.status == 1 ? 'Paid' : 'Pending'}</p>
                                                                     </td>
                                                                     <td>
-                                                                        <a class="btn btn-warning btn-sm" onclick="Update(${item.id})"><i class="fa fa-pencil"></i></a>
-                                                                        <a class="btn btn-danger btn-sm" onclick="Remove(${item.id})"><i class="fa fa-trash"></i></a>
+                                                                        <a class="btn btn-warning btn-sm" onclick="Update(${item.id})">Update</a>
+                                                                        <a class="btn btn-danger btn-sm" onclick="Remove(${item.id})">Remove</a>
                                                                     </td>
                                                                 </tr>`
                         })

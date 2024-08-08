@@ -33,6 +33,7 @@ builder.Services.AddScoped<ICommon, CommonService>();
 builder.Services.AddScoped<ICompany, CompanyService>();
 builder.Services.AddScoped<ICustomerInfo, CustomerInfoService>();
 builder.Services.AddScoped<ISms, SmsService>();
+builder.Services.AddTransient<EmailService>();
 #endregion
 
 
@@ -61,7 +62,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Customer}/{action=GetCustomers}/{id?}");
 app.MapRazorPages();
 
 app.Run();

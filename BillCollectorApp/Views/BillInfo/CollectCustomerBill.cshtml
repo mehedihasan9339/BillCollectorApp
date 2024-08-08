@@ -16,53 +16,18 @@
     table tbody tr td:last-child {
         width: 20%;
     }
-    .bg-paid{
+
+    .bg-paid {
         background-color: lightgreen !important
     }
-    .bg-pending{
+
+    .bg-pending {
         background-color: lightpink !important
     }
-
-    #tbl .btn {
+    #tbl .btn{
         padding: 5px 12px;
     }
 </style>
-
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="form theme-form">
-                    <form id="frm">
-                        <div class="row">
-                            <div class="col-md-6 row">
-                                <div class="mb-3">
-                                    <label class="col-md-3">Bill Type</label>
-                                    <select class="form-control col-md-9" id="billTypeId" name="billTypeId" onchange="GetCustomers()">
-                                        <option value="0">Choose Bill Type</option>
-                                        @foreach (var item in Model.BillTypes)
-                                        {
-                                            <option value="@item.Id">@item.name</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 row">
-                                <div class="mb-3">
-                                    <label class="col-md-3">Customer</label>
-                                    <select class="form-control col-md-9" id="customerId" name="customerId" onchange="GetCustomerBills()">
-                                        
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 
 <div class="row">
@@ -84,7 +49,42 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @foreach (var item in Model.BillInfos)
+                                {
+                                    <tr class="product-removes @(item.status == 1 ? "bg-paid" : "bg-pending")">
+                                        <td>
+                                            <p class="f-light">@item.customer.code-@item.customer.name</p>
+                                            <p class="f-light">@item.customer.phone</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">@item.month-@item.year</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">@item.generateDate?.ToString("dd MMM yyyy")</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">@item.dueDate?.ToString("dd MMM yyyy")</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">@item.bill</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">@(item.status == 1 ? "Paid" : "Pending")</p>
+                                            <p class="f-light">@(item.status == 1 ? item.paymentDate?.ToString("dd MMM yyyy") : "")</p>
+                                        </td>
+                                        <td>
+                                            @if(item.status == 1)
+                                            {
+                                                <a class="btn btn-danger btn-sm" onclick="Cancel(@item.Id)">Cancel</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-warning btn-sm" onclick="PayModal(@item.Id)">Pay</a>
+                                                <a class="btn btn-info btn-sm" onclick="Notify(@item.Id)">Notify</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -140,33 +140,18 @@
             $('#tbl').DataTable();
         })
 
-        function GetCustomers() {
-            var typeId = $('#billTypeId :selected').val();
 
-
-            $.ajax({
-                url: '/api/GetCustomerByBillTypeId?typeId=' + typeId,
-                type: 'GET',
-                success: function (response) {
-                    console.log('Data loaded successfully:', response);
-                    var option = '<option value="0">Choose Customer</option>';
-
-                    $.each(response, function (i, item) {
-                        option += `<option value="${item.id}">${item.code}-${item.name}</option>`
-                    })
-
-                    $('#customerId').empty();
-                    $('#customerId').append(option);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error loading data:', error);
-                }
-            });
+        function PayModal(id) {
+            $('#myModal #id').val(id);
+            $('#myModal #paymentMethod').val('');
+            $('#myModal #trxId').val('');
+            $('#myModal').modal('show');
         }
 
 
+
         function GetCustomerBills() {
-            var customerId = $('#customerId :selected').val();
+            var customerId = '@Model.BillInfos.FirstOrDefault().customerId';
 
 
             if (customerId > 0) {
@@ -192,30 +177,30 @@
                             }
 
                             option += `<tr class="product-removes bg-${cls}">
-                                            <td>
-                                                <p class="f-light">${item.customer?.code}-${item.customer?.name}</p>
-                                                <p class="f-light">${item.customer?.phone}</p>
-                                            </td>
-                                            <td>
-                                                <p class="f-light">${item.month}, ${item.year}</p>
-                                            </td>
-                                            <td>
-                                                <p class="f-light">${formatDate(item.generateDate)}</p>
-                                            </td>
-                                            <td>
-                                                <p class="f-light">${formatDate(item.dueDate)} </p>
-                                            </td>
-                                            <td>
-                                                <p class="f-light">${item.bill} </p>
-                                            </td>
-                                            <td>
-                                                <p class="f-light">${item.status == 1 ? 'Paid' : 'Pending'} </p>
-                                                <p class="f-light"> ${item.status == 1 ? formatDate(item.paymentDate) : ''} </p>
-                                            </td>
-                                            <td>
-                                                ${btn}
-                                            </td>
-                                        </tr>`
+                                                    <td>
+                                                        <p class="f-light">${item.customer?.code}-${item.customer?.name}</p>
+                                                        <p class="f-light">${item.customer?.phone}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="f-light">${item.month}, ${item.year}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="f-light">${formatDate(item.generateDate)}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="f-light">${formatDate(item.dueDate)} </p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="f-light">${item.bill} </p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="f-light">${item.status == 1 ? 'Paid' : 'Pending'} </p>
+                                                        <p class="f-light"> ${item.status == 1 ? formatDate(item.paymentDate) : ''} </p>
+                                                    </td>
+                                                    <td>
+                                                        ${btn}
+                                                    </td>
+                                                </tr>`
                         })
 
                         $('#tbl tbody').empty();
@@ -244,15 +229,6 @@
 
             return formattedDate;
         }
-
-
-        function PayModal(id){
-            $('#myModal #id').val(id);
-            $('#myModal #paymentMethod').val('');
-            $('#myModal #trxId').val('');
-            $('#myModal').modal('show');
-        }
-
 
 
         function Pay() {
@@ -312,7 +288,6 @@
                 }
             });
         }
-
         function Close() {
             $('#myModal').modal('hide');
         }

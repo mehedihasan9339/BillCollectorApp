@@ -5,6 +5,16 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 
+
+
+
+<style>
+    #tbl .btn {
+        padding: 5px 12px;
+    }
+</style>
+
+
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
@@ -32,7 +42,10 @@
 
                         <div class="row">
                             <div class="col">
-                                <div class="text-end"><a class="btn btn-success me-3" href="javascript:void(0)" onclick="Save()">Save</a><a class="btn btn-danger" onclick="Cancel()" href="#">Cancel</a></div>
+                                <div class="text-end">
+                                    <a class="btn btn-success me-3" href="javascript:void(0)" onclick="Save()">Save</a>
+                                    <a class="btn btn-danger" onclick="Cancel()" href="#">Cancel</a>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -193,8 +206,8 @@
                                         </td>
                                                 <td> <span class="badge badge-light-secondary">${status}</span></td>
                                         <td>
-                                                <a class="btn btn-warning btn-sm" onclick="Edit(${item.id})"><i class="fa fa-pencil"></i></a>
-                                                <a class="btn btn-danger btn-sm" onclick="Delete(${item.id})"><i class="fa fa-trash-o"></i></a>
+                                                <a class="btn btn-warning btn-sm" onclick="Edit(${item.id})">Edit</a>
+                                                <a class="btn btn-danger btn-sm" onclick="Delete(${item.id})">Remove</a>
                                         </td>
                                     </tr>`
                     })
